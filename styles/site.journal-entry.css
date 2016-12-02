@@ -1,0 +1,60 @@
+﻿#tableJournalEntry {
+    border-top: 1px;
+    border-top-style: solid;
+    border-top-color: #eee;
+}
+
+    #tableJournalEntry > thead:first-child > tr:first-child > th {
+    }
+
+    #tableJournalEntry > tbody > tr > td {
+        padding: 0 5px;
+    }
+
+    #tableJournalEntry tr {
+    }
+
+        #tableJournalEntry tr .chosen-container {
+            width: 100% !important;
+            background: none;
+        }
+
+        #tableJournalEntry tr .chosen-container a {
+            width: 100% !important;
+            background: transparent;
+        }
+
+        #tableJournalEntry tr.selected {
+            border: 2px solid #c3c3c3;
+            background: #fff7f7;
+        }
+
+            #tableJournalEntry tr.selected td {
+                padding: 10px 5px;
+                border: none;
+            }
+
+        #tableJournalEntry tr.selected .chosen-container a {
+            background: #fff;
+        }
+
+        #tableJournalEntry tr:not(.selected) {
+        }
+
+            #tableJournalEntry tr:not(.selected) input {
+                border: none;
+                background-color: transparent;
+            }
+
+            #tableJournalEntry tr:not(.selected) .input-validation-error {
+                border: 1px solid #e80c4d;
+                background-color: #fff7f7;
+            }
+
+    #tableJournalEntry tfoot {
+        background-color: #f0f0f0;
+    }
+
+        #tableJournalEntry tfoot th {
+            border: none;
+        }

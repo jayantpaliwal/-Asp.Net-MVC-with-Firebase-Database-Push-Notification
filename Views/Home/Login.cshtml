@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+    ViewBag.Title = "Log in";
+}
+
+<div class="container-fluid">
+    <div class="container container-sm animated fadeInDown">
+        <div class="center-block mt-xl">
+            <!-- START panel-->
+            @*  <img src="~/images/Fusion-Outsourcing-Logo-Small.png" alt="" class="logo-block center-block" />*@
+            <label id="lbl_ErrorMsg" style="color:red"></label>
+            <div class="panel">
+                <div class="panel-body">
+                    <p class="pv text-bold">
+                        LOGIN CREDENTIALS
+                    </p>
+                 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" style="display:none;"  id="loginUserId">
+                            <div class="form-group has-feedback mb">
+                                <input type="text" class="form-control"  placeholder="Your email" id="registerEmail">
+                                <span class="fa fa-envelope form-control-feedback text-muted"></span>
+                            </div>
+                            <br />
+                            <div class="form-group has-feedback">
+                                <input type="password" class="form-control"  placeholder="Your password" id="registerPassword">
+                                <span class="fa fa-lock form-control-feedback text-muted"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6 centerIcon">
+                            <input type="submit" class="btn btn-block btn-info mb" id="loginBtn" value="Login" />
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+    <script>
+        $(function () {
+            var config = {
+                apiKey: "AIzaSyCFlBNI7kpEwjtSDj3rfpn5vhna9KvMpt4",
+                authDomain: "fir-demo-5849c.firebaseapp.com",
+                databaseURL: "https://fir-demo-5849c.firebaseio.com",
+                storageBucket: "fir-demo-5849c.appspot.com",
+                messagingSenderId: "913189782714"
+            };
+            firebase.initializeApp(config);
+
+
+            $("#loginBtn").on('click', function () {
+
+                var email = $("#registerEmail").val();
+                var password = $("#registerPassword").val();
+                if (email == "" || password == "")
+                {
+                    $("#lbl_ErrorMsg").html("Please fill required field");
+                    $("#lbl_ErrorMsg").show();
+                    return;
+                }
+
+                var firebaseRef = firebase.database().ref();
+                
+
+              
+                firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
+ 
+                    var UserId = user.uid;
+                    $("#loginUserId").val(UserId);
+                   
+                    var UserName="";
+                    var userProfileRef = firebaseRef.child("Users");
+
+                    userProfileRef.orderByChild('uid').equalTo(UserId).on('child_added', function (Usersnapshot) {
+
+                        UserName = Usersnapshot.val().Name;
+                        var DeviceId = Usersnapshot.val().DeviceId;
+
+                        $.ajax({
+                            url: '/Home/LoginSuccess',
+                            data: { UserId: UserId, UserName: UserName, DeviceId: DeviceId , IsSuccess: true},
+                            success: function (data) {
+                                if (data.success == true) {
+                                    window.location.href = "/Home/Index?UserId=" + UserId;
+                                }
+                            },
+                            error: function () {
+                                alert("error");
+                            }
+                        });
+
+                    });
+                 
+                }).catch(function (error) {
+                    // Handle Errors here.
+                    $("#lbl_ErrorMsg").html("Login attempt failed.");
+                    $("#lbl_ErrorMsg").show();
+                });
+
+            });
+        });
+        </script>
+
+}

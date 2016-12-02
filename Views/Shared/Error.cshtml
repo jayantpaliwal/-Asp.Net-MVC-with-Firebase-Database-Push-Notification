@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <hgroup>
+                        <h3>An error occurred while processing your request.  Please contact an administrator if the problem persists.</h3>
+                    </hgroup>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (HttpContext.Current.IsDebuggingEnabled && ViewContext.RouteData.Values["exception"] != null)
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <pre>@ViewContext.RouteData.Values["exception"].ToString()</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

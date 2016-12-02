@@ -1,0 +1,16 @@
+﻿
+
+@*@{
+    MessageToUser messageToUser = null;
+    if (TempData.ContainsKey("MessageToUser"))
+    {
+        messageToUser = TempData["MessageToUser"] as MessageToUser;
+    }
+}*@
+
+@*@if (messageToUser != null)
+{
+    <div id="messageToUser" class="alert alert-@messageToUser.AlertType">
+        @messageToUser.Message
+    </div>
+}*@

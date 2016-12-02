@@ -1,0 +1,157 @@
+﻿
+ input[type=text].NotValid
+{
+    border: 1px solid rgb(255,80,80);
+    box-shadow: 0 0 2px rgb(255,0,0);
+    -moz-box-shadow: 0 0 2px rgb(255,0,0);
+    -webkit-box-shadow: 0 0 2px rgb(255,0,0);
+   /* background-color: rgb(255,240,240);*/
+     border-color: rgba(255, 0, 0, 0.8);      
+    border-radius: 4px;
+    height: 28px;
+    line-height: 30px;
+    padding: 0 1px 0 0;
+    text-indent: 5px;
+   /*width: 85%;*/
+}
+ textarea.NotValid
+{
+    border: 1px solid rgb(255,80,80);
+    box-shadow: 0 0 2px rgb(255,0,0);
+    -moz-box-shadow: 0 0 2px rgb(255,0,0);
+    -webkit-box-shadow: 0 0 2px rgb(255,0,0);
+   /* background-color: rgb(255,240,240);*/
+     border-color: rgba(255, 0, 0, 0.8);      
+    border-radius: 4px;
+    height: 28px;
+    line-height: 30px;
+    padding: 0 1px 0 0;
+    text-indent: 5px;
+   /*width: 85%;*/
+}
+ input[type=password].NotValid
+{
+    border: 1px solid rgb(255,80,80);
+    box-shadow: 0 0 2px rgb(255,0,0);
+    -moz-box-shadow: 0 0 2px rgb(255,0,0);
+    -webkit-box-shadow: 0 0 2px rgb(255,0,0);
+  /*  background-color: rgb(255,240,240);*/
+    border-radius: 4px;
+    height:28px;
+    line-height: 27px;
+    padding: 0 1px 0 0;
+    text-indent: 5px;
+    /*width: 85%;*/
+}
+ select.NotValid
+{
+    border: 1px solid rgb(255,80,80);
+    box-shadow: 0 0 2px rgb(255,0,0);
+    -moz-box-shadow: 0 0 2px rgb(255,0,0);
+    -webkit-box-shadow: 0 0 2px rgb(255,0,0);
+    /*background-color: rgb(255,240,240);*/
+    border-radius: 4px;
+    height: 29px;
+    line-height: 27px;
+    padding: 0 5px 0 0;
+    text-indent: 5px;
+  /*  width: 98%;*/
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 9px;
+}
+
+/* input
+{
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #D1D6C4;
+  /*  border-radius: 4px 4px 4px 4px;*/
+  /*  border-style: solid;
+    border-width: 2px 1px 1px 2px;
+    box-shadow: 0 0 2px #D1D6C4;
+    height: 29px;
+    line-height: 27px;
+    padding: 0 5px 0 2px;
+    text-indent: 5px;
+}*/
+
+ select
+{
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #D1D6C4;
+   /* border-radius: 4px 4px 4px 4px;*/
+    border-style: solid;
+    border-width: 2px 1px 1px 2px;
+    box-shadow: 0 0 2px #D1D6C4;
+    height: 29px;
+    line-height: 27px;
+    padding: 0 5px 0 2px;
+    text-indent: 5px;
+    margin-right: 15px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+
+.verror
+{
+    /*background: url("../images/error.png") no-repeat scroll 100% 100% transparent;*/
+
+    color: #FFFFFF;
+    height: 30px;
+    line-height: 26px;
+    padding: 0 5px 0 5px;
+    position: absolute;
+    right: -225px;  
+    text-shadow: 0 1px 2px #000000;
+    top: 30px;   
+    position: absolute;
+    right: -250px;
+    width: 200px;
+    margin-top: -4px;
+    border: 1px solid #c93;
+    padding: 10px 12px;
+    /* to fix IE6, I can't just declare a background-color,
+    I must do a bg image, too!  So I'm duplicating the pointer.gif
+    image, and positioning it so that it doesn't show up
+    within the box */
+   background: #ffc url(../images/pointer.gif) no-repeat -10px 5px;
+}
+
+
+ input[type=password].list
+{
+    border: 1px solid rgb(255,80,80);
+    box-shadow: 0 0 2px rgb(255,0,0);
+    -moz-box-shadow: 0 0 2px rgb(255,0,0);
+    -webkit-box-shadow: 0 0 2px rgb(255,0,0);
+  /*  background-color: rgb(255,240,240);*/
+    border-radius: 4px;
+    height:60px;
+    line-height: 26px;
+    padding: 0 1px 0 0;
+    text-indent: 5px;
+    /*width: 85%;*/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

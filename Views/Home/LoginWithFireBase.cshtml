@@ -1,0 +1,276 @@
+﻿@{
+    ViewBag.Title = "LoginWithFireBase";
+}
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<style media="screen">
+    body
+    {
+        font-family: Roboto, Arial, sans-serif;
+        background: #ECEFF1;
+        color: rgba(0,0,0,0.87);
+    }
+
+    a
+    {
+        color: rgb(3,155,229);
+    }
+
+    #message
+    {
+        max-width: 400px;
+        margin: 40px auto;
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2),0 1px 1px 0 rgba(0,0,0,0.14),0 2px 1px -1px rgba(0,0,0,0.12);
+        border-radius: 2px;
+        background: white;
+        padding: 16px 24px;
+    }
+
+        #message h1
+        {
+            font-size: 22px;
+            font-weight: 500;
+            text-align: center;
+            margin: 0 0 16px;
+        }
+
+        #message p
+        {
+            font-weight: 300;
+            line-height: 150%;
+        }
+
+        #message ul
+        {
+            list-style: none;
+            margin: 16px 0 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #message li a
+        {
+            display: inline-block;
+            padding: 8px;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: 500;
+            background: rgb(3,155,229);
+            color: white;
+            border: 1px solid rgb(3,155,229);
+            border-radius: 3px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+        }
+</style>
+
+
+<h2>Use a local account to log in.</h2>
+<button type="submit" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#loginModal" id="logInShow">Login</button>
+<button type="submit" class="btn btn-danger" style="display:none;" id="LogOut">Log Out</button>
+<button type="submit" class="btn btn-success" style="display:none;" data-dismiss="modal" data-toggle="modal" data-target="#MessageModal" id="SendMessagebtn">Send Message</button>
+
+<table id="MessageData" class="table table-bordered">
+</table>
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="Register" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="registerModalLabel">Register</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recipient-name" class="control-label">Email:</label>
+                    <input type="text" class="form-control" id="registerEmail">
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="control-label">Password:</label>
+                    <input type="password" class="form-control" id="registerPassword">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="loginBtn">Login</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="Message" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Message</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <input type="text" style="display:none;" class="form-control" id="MessageUserId">
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="control-label">Message:</label>
+                    <input type="text" class="form-control" id="MessageText">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="MessageSend">Send</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+
+    <script>
+        $(function () {
+
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyCFlBNI7kpEwjtSDj3rfpn5vhna9KvMpt4",
+                authDomain: "fir-demo-5849c.firebaseapp.com",
+                databaseURL: "https://fir-demo-5849c.firebaseio.com",
+                storageBucket: "fir-demo-5849c.appspot.com",
+                messagingSenderId: "913189782714"
+            };
+            firebase.initializeApp(config);
+            var UserId = "";
+            /*Create User with fireBase*/
+            $("#loginBtn").on('click', function () {
+                var email = $("#registerEmail").val();
+                var password = $("#registerPassword").val();
+
+                //firebase.auth().createUserWithEmailAndPassword(email, password).then(function (user) {
+                //    debugger;
+                //    var firebaseRef = firebase.database().ref();
+                //    var userdata = firebase.auth().currentUser;
+                //    if (userdata != null) {
+                //        var uid = user.uid;
+                //        var usersRef = firebaseRef.child("Users");
+                //        usersRef.push({
+                //            uid: userdata.uid,
+                //            Email: userdata.email,
+                //            Password: password,
+                //            DeviceId: "1122"
+                //        });
+                //    }
+
+                var firebaseRef = firebase.database().ref();
+                var userProfileRef = firebaseRef.child("Users");
+
+              
+                firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
+                    debugger;
+                    alert('success');
+                    $("#loginModal").modal('hide');
+                    $("#logInShow").hide();
+                    $("#SendMessagebtn").show();
+                    $("#LogOut").show();
+                    UserId = user.uid;
+                    $("#MessageUserId").val(UserId);
+                    /*Create Message*/
+                    //var messageRef = firebaseRef.child("Message");
+                    //messageRef.push({
+                    //    uid: UserId,
+                    //    Message: "Hello Test"
+
+                    //});
+
+
+                    var MessageRef = firebaseRef.child("Message");
+                    MessageRef.orderByChild('uid').equalTo(UserId).on('child_added', function (snapshot) {
+                     
+                        var table = document.getElementById("MessageData");
+                        var row = table.insertRow(0);
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        cell1.innerHTML = snapshot.val().Message;
+                        var MessageId = snapshot.key;
+                        cell2.innerHTML = '<button type="button" onclick="OnDeleteMsg(\'' + MessageId + '\');">Delete</button>'
+                        cell3.innerHTML = snapshot.key;
+                        cell3.style.visibility = 'hidden';
+
+                    });
+
+
+                }).catch(function (error) {
+                    // Handle Errors here.
+                    alert('Error');
+                    console.log(error);
+                });
+                /*  userProfileRef.on('child_added', function (snapshot) {
+                      console.log(snapshot.name, snapshot.val());
+                      if (snapshot.val().Email == email && snapshot.val().Password == password) {
+                          alert('Success');
+                          var UserId = snapshot.val().uid;
+                          $.ajax({
+                              //type: 'POST',
+                             // dataType: 'json',
+                              url: '/Home/MessageList',
+                              data: { UserId: '67' },
+                              success: function (Data) {
+                                  alert(data.id);
+                                  alert(data.name);
+                              },
+                              error: function (XMLHttpRequest, textStatus, errorThrown) {
+  
+                              }
+                          });
+  
+                      }
+                      else {
+                          alert('Failed');
+                      }
+                  }); */
+            });
+
+            /*Create Message*/
+            $("#MessageSend").on('click', function () {
+                var MessageUserId = $("#MessageUserId").val();
+                var MessageText = $("#MessageText").val();
+                $("#MessageModal").modal('hide');
+                /*Create Message*/
+                var firebaseRef = firebase.database().ref();
+                var messageRef = firebaseRef.child("Message");
+                messageRef.push({
+                    uid: MessageUserId,
+                    Message: MessageText
+
+                });
+            });
+            $("#LogOut").on('click', function () {
+                firebase.auth().signOut();
+                alert("you succesfully logout");
+                window.location.reload();
+                
+            });
+        });
+
+        function OnDeleteMsg(MessageId) {
+            alert(MessageId);
+
+            var firebaseRef = firebase.database().ref();
+            var messageRef = firebaseRef.child("Message");
+            messageRef.child(MessageId).remove();
+
+          //  
+
+        }
+    </script>
+}

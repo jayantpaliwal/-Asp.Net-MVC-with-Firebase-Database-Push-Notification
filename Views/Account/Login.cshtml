@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+    ViewBag.Title = "Log in";
+}
+
+<div class="container-fluid">
+    <div class="container container-sm animated fadeInDown">
+        <div class="center-block mt-xl">
+            <!-- START panel-->
+            @*  <img src="~/images/Fusion-Outsourcing-Logo-Small.png" alt="" class="logo-block center-block" />*@
+            <div class="panel">
+                <div class="panel-body">
+                    <p class="pv text-bold">
+                        LOGIN CREDENTIALS
+                    </p>
+                     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                    {
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group has-feedback mb">
+                                <input type="text" class="form-control" placeholder="Your email" id="registerEmail">
+                                <span class="fa fa-envelope form-control-feedback text-muted"></span>
+                            </div>
+                            <br />
+                            <div class="form-group has-feedback">
+                                <input type="password" class="form-control" placeholder="Your password" id="registerPassword">
+                                <span class="fa fa-lock form-control-feedback text-muted"></span>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6 centerIcon">
+                            <input type="submit" class="btn btn-block btn-info mb" id="loginBtn" value="Login" />
+                        </div>
+                    </div>
+                     }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+    <script>
+        $(function () {
+            var config = {
+                apiKey: "AIzaSyCFlBNI7kpEwjtSDj3rfpn5vhna9KvMpt4",
+                authDomain: "fir-demo-5849c.firebaseapp.com",
+                databaseURL: "https://fir-demo-5849c.firebaseio.com",
+                storageBucket: "fir-demo-5849c.appspot.com",
+                messagingSenderId: "913189782714"
+            };
+            firebase.initializeApp(config);
+
+
+            $("#loginBtn").on('click', function () {
+                var email = $("#registerEmail").val();
+                var password = $("#registerPassword").val();
+
+                var firebaseRef = firebase.database().ref();
+                var userProfileRef = firebaseRef.child("Users");
+
+
+                firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
+                  
+                    alert('success');
+                    var UserId = user.uid;
+                    //  $("#MessageUserId").val(UserId);
+                    window.location.href = "/Home/Index?UserId=" + UserId;
+
+
+
+                }).catch(function (error) {
+                    // Handle Errors here.
+                    alert('Error');
+                    console.log(error);
+                });
+
+            });
+        });
+        </script>
+
+}

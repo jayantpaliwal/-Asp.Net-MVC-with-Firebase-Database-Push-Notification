@@ -1,0 +1,191 @@
+﻿@{
+    ViewBag.Title = "Welcome";
+}
+
+<div id="MsgPointerEvent">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default panel-header">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h3 class="pull-left">@ViewBag.Title &nbsp;<h3>@ViewBag.UserName</h3>
+                                </h3>
+                                <br />
+                                <h5 style="color: grey;" class="pull-left">Powered by Firebase and Asp.Net MVC + C#</h5>
+                            </div>
+                            <div class="col-sm-4 text-right">
+                                <button type="submit" class="btn btn-info pull-right" data-dismiss="modal" data-toggle="modal" data-target="#MessageModal" id="SendMessagebtn">Send New Message</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Message List</h4>
+                        <hr class="panel-divider" />
+                    </div>
+                    <div class="panel-body" style="height: 400px; overflow: scroll;">
+                        <table class="table table-condensed table-striped table-hover table-datatable bg-white" id="MessageData">
+                           
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="Message" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Message</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <input type="text" style="display: none;" class="form-control" id="MessageUserId">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Send Message to Android App:</label>
+
+                        <textarea class="form-control" id="MessageText" placeholder="The message you send will go to your android device as Push Notification and will dispaly in list."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="MessageSend">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<img src="~/images/spinner.gif" id="loading-indicator" style="display: none; z-index: 5000;" />
+
+@section scripts{
+    <script src="~/Scripts/jquery.dataTables.js"></script>
+    <script src="~/Scripts/jquery.toaster.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            var UserId = '@ViewBag.UserId';
+            var firebaseRef = firebase.database().ref();
+            var MessageRef = firebaseRef.child("Message");
+            // MessageRef.orderByChild('uid').equalTo(UserId)
+            var newItems = false;
+
+
+            $("#loading-indicator").show();
+            $("#MsgPointerEvent").css('pointer-events', 'none');
+
+            debugger;
+            var table = document.getElementById("MessageData");
+
+            var MessageList = MessageRef.orderByChild('uid').equalTo(UserId);
+
+            MessageList.on('child_added', function (snapshot) {
+
+                if (newItems) {
+                    $.toaster({ priority: 'success', message: snapshot.val().Message });
+                }
+
+                var row = table.insertRow(0);
+                row.id = "tr_" + snapshot.key;
+                var cell1 = row.insertCell(0);
+                cell1.style.display = 'none';
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = snapshot.key;
+                cell2.innerHTML = snapshot.val().Message;
+                cell3.innerHTML = snapshot.val().Date;
+
+                var MessageId = snapshot.key;
+                cell4.innerHTML = '<button type="button" class="btn btn-danger btn-sm" onclick="OnDeleteMsg(\'' + MessageId + '\');">Delete</button>'
+
+            });
+            MessageList.once('value', function (messages) {
+                newItems = true;
+                $("#loading-indicator").hide();
+                $("#MsgPointerEvent").css('pointer-events', 'auto');
+
+            });
+
+            /*Create Message*/
+            $("#MessageSend").on('click', function () {
+                var MessageUserId = '@ViewBag.UserId';
+                var DeviceId = '@ViewBag.DeviceId';
+                var UserName = '@ViewBag.UserName';
+                var MessageText = $("#MessageText").val();
+
+                $("#MessageModal").modal('hide');
+                /*Create Message*/
+                var firebaseRef = firebase.database().ref();
+                var messageRef = firebaseRef.child("Message");
+                var currentdate = new Date();
+                var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth() + 1) + "/"
+                + currentdate.getFullYear();
+                messageRef.push({
+                    uid: MessageUserId,
+                    Message: MessageText,
+                    Date: datetime
+                });
+                //Push Notification
+
+                if (DeviceId != "" && DeviceId != null && DeviceId != undefined) {
+                    $.ajax({
+                        url: '/Home/SendNotification',
+                        data: { deviceId: DeviceId, message: MessageText, UserName: UserName },
+                        success: function (data) {
+                            if (data.success == true) {
+
+                            }
+                        },
+                        error: function () {
+                            alert("error");
+                        }
+                    });
+                }
+
+            });
+
+            $('#SendMessagebtn').on('click', function () {
+                $("#MessageText").val("");
+
+            });
+            // PUSH
+
+        });
+
+
+        function OnDeleteMsg(MessageId) {
+
+            var firebaseRef = firebase.database().ref();
+            var messageRef = firebaseRef.child("Message");
+            var onComplete = function (error) {
+                if (error) {
+                    console.log('Synchronization failed');
+                } else {
+                    $("#tr_" + MessageId).remove();
+                    console.log('Synchronization succeeded');
+                }
+            };
+            messageRef.child(MessageId).remove(onComplete);
+
+
+        }
+
+    </script>
+}
